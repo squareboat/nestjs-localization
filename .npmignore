@@ -1,0 +1,19 @@
+# source
+lib
+tests
+index.ts
+package-lock.json
+tslint.json
+tsconfig.json
+.prettierrc
+
+# github
+cover.png
+.github
+CONTRIBUTING.MD
+
+# misc
+.commitlintrc.json
+.release-it.json
+.eslintignore
+.eslintrc.js
