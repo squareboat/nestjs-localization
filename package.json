@@ -1,6 +1,6 @@
 {
   "name": "@squareboat/nest-localization",
-  "version": "0.0.9",
+  "version": "0.0.1",
   "description": "The localization package for your NestJS Applications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,10 +12,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/squareboat/nest-queue.git"
+    "url": "https://github.com/squareboat/nestjs-localization.git"
   },
   "bugs": {
-    "url": "https://github.com/squareboat/nest-queue/issues"
+    "url": "https://github.com/squareboat/nestjs-localization/issues"
   },
   "homepage": "https://squareboat.com/open-source/nest-queue/",
   "author": "Rasik Raj <rasikraj01@gmail.com>",
