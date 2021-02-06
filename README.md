@@ -139,17 +139,17 @@ Example :
 
 You may retrieve translation strings from your language files using the `__` helper function. The `__` function takes 2 required arguments, the key of the translation string you wish of retrive and the language code. You can use `.` the dot notation to refer to nested strings.
 
-```typescript
+```javascript
 __(key: string, language: string, options?: Record<string, any>): string
 ```
 
 Examples :
 
 ```javascript
-__('helloWorld', 'en'); // returns => Hello World
-__('Have a good day', 'de'); // returns => Haben Sie einen guten Tag
-__('greetings.morning', 'en'); // returns => Good Morning
-__('randomKey', 'en'); // returns => ERR::INVALID KEY ==> randomKey
+__('helloWorld', 'en');           // returns => Hello World
+__('Have a good day', 'de');      // returns => Haben Sie einen guten Tag
+__('greetings.morning', 'en');    // returns => Good Morning
+__('randomKey', 'en');            // returns => ERR::INVALID KEY ==> randomKey
 ```
 
 ### Replacing Parameters In Translation Strings
@@ -194,7 +194,7 @@ You may even create more complex pluralization rules which specify translation s
 
 After defining a translation string that has pluralization options, you may use the `transChoice` function to retrieve the line for a given "count".
 
-```typescript
+```javascript
 transChoice(
   key: string,
   language: string,
