@@ -40,14 +40,14 @@
  * // Replace `memoize.Cache`.
  * memoize.Cache = WeakMap
  */
-function memoize(func, resolver) {
+function memoize(func: any, resolver: any): any {
   if (
     typeof func !== 'function' ||
     (resolver != null && typeof resolver !== 'function')
   ) {
     throw new TypeError('Expected a function');
   }
-  const memoized = function (...args) {
+  const memoized = function (...args: any[]) {
     const key = resolver ? resolver.apply(this, args) : args[0];
     const cache = memoized.cache;
 

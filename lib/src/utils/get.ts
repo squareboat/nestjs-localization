@@ -1,6 +1,6 @@
 import stringToPath from './stringToPath';
 
-function baseGet(object, path) {
+function baseGet(object: Record<string, any>, path: any): any {
   path = castPath(path, object);
 
   let index = 0;
@@ -21,7 +21,7 @@ const toString = Object.prototype.toString;
  * @param {*} value The value to query.
  * @returns {string} Returns the `toStringTag`.
  */
-function getTag(value) {
+function getTag(value: string): any {
   if (value == null) {
     return value === undefined ? '[object Undefined]' : '[object Null]';
   }
@@ -36,7 +36,7 @@ function getTag(value) {
  * @param {Object} [object] The object to query keys on.
  * @returns {Array} Returns the cast property path array.
  */
-function castPath(value, object) {
+function castPath(value: string, object: Record<string, any>): any {
   if (Array.isArray(value)) {
     return value;
   }
@@ -54,7 +54,7 @@ const reIsPlainProp = /^\w*$/;
  * @param {Object} [object] The object to query keys on.
  * @returns {boolean} Returns `true` if `value` is a property name, else `false`.
  */
-function isKey(value, object) {
+function isKey(value: any, object: Record<string, any>): boolean {
   if (Array.isArray(value)) {
     return false;
   }
@@ -84,7 +84,7 @@ const INFINITY = 1 / 0;
  * @param {*} value The value to inspect.
  * @returns {string|symbol} Returns the key.
  */
-function toKey(value) {
+function toKey(value: number): any {
   if (typeof value === 'string' || isSymbol(value)) {
     return value;
   }
@@ -92,7 +92,7 @@ function toKey(value) {
   return result == '0' && 1 / value == -INFINITY ? '-0' : result;
 }
 
-function isSymbol(value) {
+function isSymbol(value: any): boolean {
   const type = typeof value;
   return (
     type == 'symbol' ||
@@ -100,7 +100,7 @@ function isSymbol(value) {
   );
 }
 
-function get(object, path, defaultValue) {
+function get(object: Record<string, any>, path: any, defaultValue: any): any {
   const result = object == null ? undefined : baseGet(object, path);
   return result === undefined ? defaultValue : result;
 }

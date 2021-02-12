@@ -6,13 +6,13 @@ import * as fs from 'fs';
 
 @Injectable()
 export class Language {
-  private static data;
+  private static data: Record<string, any>;
 
   constructor(@Inject(CONFIG_OPTIONS) private options: { path: string }) {
     const { path } = options;
-    const data = {};
+    const data: Record<string, any> = {};
 
-    Language.readFiles(path, function (filename, content) {
+    Language.readFiles(path, function (filename: string, content: any) {
       data[filename.split('.')[0]] = JSON.parse(content);
     });
     Language.data = data;
@@ -21,7 +21,7 @@ export class Language {
   static trans(
     key: string,
     language: string,
-    options?: Record<string, any>,
+    options?: Record<string, any>
   ): string {
     let langData = Language.data[language];
     if (!langData) langData = Language.data['en'];
@@ -41,7 +41,7 @@ export class Language {
     key: string,
     language: string,
     count: number,
-    options?: Record<string, any>,
+    options?: Record<string, any>
   ): string {
     let langData = Language.data[language];
     if (!langData) langData = Language.data['en'];
@@ -49,10 +49,10 @@ export class Language {
     let text = get(langData, key, null);
     if (!text || typeof text !== 'string') return `ERR::INVALID KEY ==> ${key}`;
 
-    const textObjArr = [];
+    const textObjArr: Record<string, any>[] = [];
     let texts = text.split('|');
     texts.forEach((t) => {
-      const limits = t.match(/\[(.*?)\]/)[1].split(',');
+      const limits: string[] = t.match(/\[(.*?)\]/)![1].split(',');
       textObjArr.push({
         text: t.replace(/\[.*?\]/, '').trim(),
         limit: {
@@ -97,7 +97,7 @@ export class Language {
     const keyStartIdx = lowerCaseText.indexOf(key);
     const identifier: string = text.substr(
       keyStartIdx,
-      keyStartIdx + key.length,
+      keyStartIdx + key.length
     );
 
     const caseType = isUpperCase(identifier)
@@ -129,14 +129,14 @@ export class Language {
           default:
             return value;
         }
-      },
+      }
     );
     return text;
   }
 
-  private static readFiles(dirname, onFileContent) {
+  private static readFiles(dirname: string, onFileContent: any) {
     const fss = fs.readdirSync(dirname);
-    fss.forEach((filename) => {
+    fss.forEach((filename: string) => {
       const fileData = fs.readFileSync(dirname + filename, {
         encoding: 'utf-8',
       });
