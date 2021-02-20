@@ -17,7 +17,7 @@
   "bugs": {
     "url": "https://github.com/squareboat/nestjs-localization/issues"
   },
-  "homepage": "https://squareboat.com/open-source/nest-queue/",
+  "homepage": "https://github.com/squareboat/nestjs-localization",
   "author": "Rasik Raj <rasikraj01@gmail.com>",
   "private": false,
   "license": "MIT",

@@ -35,18 +35,11 @@ export class LocalizationModule {
     return {
       module: LocalizationModule,
       imports: [],
-      providers: [
-        {
-          provide: CONFIG_OPTIONS,
-          useValue: options,
-        },
-        Language,
-        this.createQueueOptionsProvider(options),
-      ],
+      providers: [Language, this.createLocalizationOptionsProvider(options)],
     };
   }
 
-  private static createQueueOptionsProvider(
+  private static createLocalizationOptionsProvider(
     options: LocalizationAsyncOptions,
   ): Provider {
     if (options.useFactory) {
