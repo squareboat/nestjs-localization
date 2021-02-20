@@ -36,7 +36,7 @@ export class Language {
   static trans(
     key: string,
     language?: string | Record<string, any>,
-    options?: Record<string, any>,
+    options?: Record<string, any>
   ): string {
     let langData = Language.data[this.fallBackLang];
     if (typeof language === 'string' && language != '') {
@@ -59,21 +59,21 @@ export class Language {
 
   static transChoice(
     key: string,
-    language?: string,
-    count?: number,
-    options?: Record<string, any>,
+    language?: string | number,
+    count?: number | Record<string, any>,
+    options?: Record<string, any>
   ): string {
     let langData = Language.data[this.fallBackLang];
     if (typeof language === 'string' && language != '') {
       langData = Language.data[language];
     }
 
-    if (typeof count === 'object') {
-      options = count as Record<string, any>;
-    }
-
     if (typeof language === 'number') {
       count = language as number;
+    }
+
+    if (typeof count === 'object') {
+      options = count as Record<string, any>;
     }
 
     let text = get(langData, key, null);
@@ -97,12 +97,12 @@ export class Language {
 
     let finalText = '';
     for (const t of textObjArr) {
-      if (t.limit.upper === count && t.limit.lower === count) {
+      if (count && t.limit.upper === count && t.limit.lower === count) {
         finalText = t.text;
         break;
       }
 
-      if (t.limit.upper >= count && t.limit.lower <= count) {
+      if (count && t.limit.upper >= count && t.limit.lower <= count) {
         finalText = t.text;
         break;
       }
@@ -130,7 +130,7 @@ export class Language {
     const keyStartIdx = lowerCaseText.indexOf(key);
     const identifier: string = text.substr(
       keyStartIdx,
-      keyStartIdx + key.length,
+      keyStartIdx + key.length
     );
 
     const caseType = isUpperCase(identifier)
@@ -163,7 +163,7 @@ export class Language {
           default:
             return value;
         }
-      },
+      }
     );
     return text;
   }
