@@ -44,7 +44,7 @@ Recommended directory structure :
 package.json
 ```
 
-Once you have the `nestjs-localization` package installed in your project. You'll need to import the module into your application. You can import the module statically or dynamically.
+Once you have the `nestjs-localization` package installed in your project. You'll need to import the module into your application. You can import the module statically or dynamically. You also need to specify a fallback language that the package will fall back to if no language is specified or the key for that language is not available.
 
 #### Static Import
 
@@ -58,6 +58,7 @@ import { LocalizationModule } from '@lib/localization';
   imports: [
     LocalizationModule.register({
       path: 'absolute/path/to/your/resource/directory',
+      fallBackLang: 'en',
     }),
   ],
 })
@@ -73,6 +74,7 @@ import { registerAs } from '@nestjs/config';
 
 export default registerAs('localization', () => ({
   path: 'absolute/path/to/your/resource/directory',
+  fallBackLang: 'en',
 }));
 ```
 
@@ -140,7 +142,7 @@ Example :
 You may retrieve translation strings from your language files using the `__` helper function. The `__` function takes 2 required arguments, the key of the translation string you wish of retrive and the language code. You can use `.` the dot notation to refer to nested strings.
 
 ```javascript
-__(key: string, language: string, options?: Record<string, any>): string
+__(key: string, language?: string, options?: Record<string, any>): string
 ```
 
 Examples :
@@ -150,6 +152,15 @@ __('helloWorld', 'en');           // returns => Hello World
 __('Have a good day', 'de');      // returns => Haben Sie einen guten Tag
 __('greetings.morning', 'en');    // returns => Good Morning
 __('randomKey', 'en');            // returns => ERR::INVALID KEY ==> randomKey
+```
+
+You can also skip the language parameter if you wish to and the package will use the fallback language as the speified language.
+Examples :
+
+```javascript
+__('helloWorld');           // returns => Hello World
+__('greetings.morning');    // returns => Good Morning
+__('randomKey');            // returns => ERR::INVALID KEY ==> randomKey
 ```
 
 ### Replacing Parameters In Translation Strings
@@ -197,8 +208,8 @@ After defining a translation string that has pluralization options, you may use 
 ```javascript
 transChoice(
   key: string,
-  language: string,
-  count: number,
+  language?: string | number,
+  count?: number | Record<string, any>,
   options?: Record<string, any>,
 ): string
 ```
@@ -208,6 +219,14 @@ In this example, since the count is greater than one, the plural form of the tra
 ```javascript
 transChoice('apples', 'en', 10); // returns => There are some apples
 ```
+
+If you want the string to use the fallback language you can omit the 2nd parameter as shown below :
+
+```javascript
+transChoice('apples', 10); // returns => There are some apples
+```
+
+> NOTE : **The count agrument is required**
 
 You may also define placeholder attributes in pluralization strings. These placeholders may be replaced by passing an array as the third argument to the `transChoice` function:
 
