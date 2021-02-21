@@ -58,7 +58,7 @@ import { LocalizationModule } from '@lib/localization';
   imports: [
     LocalizationModule.register({
       path: 'absolute/path/to/your/resource/directory',
-      fallBackLang: 'en',
+      fallbackLang: 'en',
     }),
   ],
 })
@@ -74,7 +74,7 @@ import { registerAs } from '@nestjs/config';
 
 export default registerAs('localization', () => ({
   path: 'absolute/path/to/your/resource/directory',
-  fallBackLang: 'en',
+  fallbackLang: 'en',
 }));
 ```
 
@@ -148,19 +148,19 @@ __(key: string, language?: string, options?: Record<string, any>): string
 Examples :
 
 ```javascript
-__('helloWorld', 'en');           // returns => Hello World
-__('Have a good day', 'de');      // returns => Haben Sie einen guten Tag
-__('greetings.morning', 'en');    // returns => Good Morning
-__('randomKey', 'en');            // returns => ERR::INVALID KEY ==> randomKey
+__('helloWorld', 'en'); // returns => Hello Worlds
+__('Have a good day', 'de'); // returns => Haben Sie einen guten Tag
+__('greetings.morning', 'en'); // returns => Good Morning
+__('randomKey', 'en'); // returns => ERR::INVALID KEY ==> randomKey
 ```
 
 You can also skip the language parameter if you wish to and the package will use the fallback language as the speified language.
 Examples :
 
 ```javascript
-__('helloWorld');           // returns => Hello World
-__('greetings.morning');    // returns => Good Morning
-__('randomKey');            // returns => ERR::INVALID KEY ==> randomKey
+__('helloWorld'); // returns => Hello World
+__('greetings.morning'); // returns => Good Morning
+__('randomKey'); // returns => ERR::INVALID KEY ==> randomKey
 ```
 
 ### Replacing Parameters In Translation Strings
@@ -226,7 +226,7 @@ If you want the string to use the fallback language you can omit the 2nd paramet
 transChoice('apples', 10); // returns => There are some apples
 ```
 
-> NOTE : **The count agrument is required**
+> NOTE : **The count agrument is required for tranChoice**
 
 You may also define placeholder attributes in pluralization strings. These placeholders may be replaced by passing an array as the third argument to the `transChoice` function:
 

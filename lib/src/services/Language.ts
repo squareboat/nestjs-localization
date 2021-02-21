@@ -13,7 +13,7 @@ import { LocalizationOptions } from '../interfaces';
 @Injectable()
 export class Language {
   private static data: Record<string, any>;
-  private static fallBackLang: string;
+  private static fallbackLang: string;
   private static caseTypes = {
     UPPER_CASE: 1,
     LOWER_CASE: 2,
@@ -22,7 +22,7 @@ export class Language {
   };
 
   constructor(@Inject(CONFIG_OPTIONS) private options: LocalizationOptions) {
-    const { path, fallBackLang } = options;
+    const { path, fallbackLang } = options;
     const data: Record<string, any> = {};
 
     Language.readFiles(path, function (filename: string, content: any) {
@@ -30,7 +30,7 @@ export class Language {
     });
 
     Language.data = data;
-    Language.fallBackLang = fallBackLang;
+    Language.fallbackLang = fallbackLang;
   }
 
   static trans(
@@ -38,7 +38,7 @@ export class Language {
     language?: string | Record<string, any>,
     options?: Record<string, any>
   ): string {
-    let langData = Language.data[this.fallBackLang];
+    let langData = Language.data[this.fallbackLang];
     if (typeof language === 'string' && language != '') {
       langData = Language.data[language];
     } else {
@@ -63,7 +63,7 @@ export class Language {
     count?: number | Record<string, any>,
     options?: Record<string, any>
   ): string {
-    let langData = Language.data[this.fallBackLang];
+    let langData = Language.data[this.fallbackLang];
     if (typeof language === 'string' && language != '') {
       langData = Language.data[language];
     }

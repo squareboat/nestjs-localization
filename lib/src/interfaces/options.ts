@@ -2,7 +2,7 @@ import { ModuleMetadata, Type } from '@nestjs/common';
 
 export interface LocalizationOptions {
   path: string;
-  fallBackLang: string;
+  fallbackLang: string;
 }
 
 export interface LocalizationAsyncOptionsFactory {
