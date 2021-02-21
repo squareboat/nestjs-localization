@@ -76,33 +76,24 @@ export class Language {
       count = language as number;
     }
 
+    if (!count && count != 0) throw new Error('Count value not found');
+
     let text = get(langData, key, null);
     if (!text || typeof text !== 'string') return `ERR::INVALID KEY ==> ${key}`;
 
     const textObjArr: Record<string, any>[] = [];
     text.split('|').forEach((t) => {
-      const limits: string[] = t.match(/\[(.*?)\]/)![1].split(',');
-      textObjArr.push({
-        text: replaceAll(t, /\[.*?\]/, '').trim(),
-        limit: {
-          lower: limits[0] === '*' ? Number.NEGATIVE_INFINITY : +limits[0],
-          upper: limits[1]
-            ? limits[1] === '*'
-              ? Number.POSITIVE_INFINITY
-              : +limits[1]
-            : +limits[0],
-        },
-      });
+      textObjArr.push(this.choiceStringParser(t));
     });
 
     let finalText = '';
     for (const t of textObjArr) {
-      if (count && t.limit.upper === count && t.limit.lower === count) {
+      if (t.limit.upper === count && t.limit.lower === count) {
         finalText = t.text;
         break;
       }
 
-      if (count && t.limit.upper >= count && t.limit.lower <= count) {
+      if (t.limit.upper >= count && t.limit.lower <= count) {
         finalText = t.text;
         break;
       }
@@ -119,6 +110,22 @@ export class Language {
     }
 
     return finalText ? finalText : `ERR::INVALID COUNT ==> ${count}`;
+  }
+
+  private static choiceStringParser(t: string): Record<string, any> {
+    const limits: string[] = t.match(/\[(.*?)\]/)![1].split(',');
+
+    return {
+      text: replaceAll(t, /\[.*?\]/, '').trim(),
+      limit: {
+        lower: limits[0] === '*' ? Number.NEGATIVE_INFINITY : +limits[0],
+        upper: limits[1]
+          ? limits[1] === '*'
+            ? Number.POSITIVE_INFINITY
+            : +limits[1]
+          : +limits[0],
+      },
+    };
   }
 
   private static handleOptions(text: string, key: string, value: any): string {
