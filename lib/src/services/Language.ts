@@ -68,12 +68,12 @@ export class Language {
       langData = Language.data[language];
     }
 
-    if (typeof language === 'number') {
-      count = language as number;
-    }
-
     if (typeof count === 'object') {
       options = count as Record<string, any>;
+    }
+
+    if (typeof language === 'number') {
+      count = language as number;
     }
 
     let text = get(langData, key, null);
