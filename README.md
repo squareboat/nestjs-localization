@@ -21,11 +21,11 @@ Nestjs localization provides a convenient way to retrieve strings in various lan
 
 To install the package, run :
 
-`npm i nestjs-localization`
+`npm i @squareboat/nestjs-localization`
 
 Or if you are using yarn
 
-`yarn add nestjs-localization`
+`yarn add @squareboat/nestjs-localization`
 
 ## Getting Started
 
@@ -44,7 +44,7 @@ Recommended directory structure :
 package.json
 ```
 
-Once you have the `nestjs-localization` package installed in your project. You'll need to import the module into your application. You can import the module statically or dynamically. You also need to specify a fallback language that the package will fall back to if no language is specified or the key for that language is not available.
+Once you have the `@squareboat/nestjs-localization` package installed in your project. You'll need to import the module into your application. You can import the module statically or dynamically. You also need to specify a fallback language that the package will fall back to if no language is specified or the key for that language is not available.
 
 #### Static Import
 
@@ -191,7 +191,7 @@ If your placeholder contains all capital letters, or only has its first letter c
 
 ## Pluralization
 
-Pluralization is a complex problem, as different languages have a variety of complex rules for pluralization; however, `nestjs-localization` can help you translate strings differently based on pluralization rules that you define. Using a `|` character, you may distinguish singular and plural forms of a string:
+Pluralization is a complex problem, as different languages have a variety of complex rules for pluralization; however, `@squareboat/nestjs-localization` can help you translate strings differently based on pluralization rules that you define. Using a `|` character, you may distinguish singular and plural forms of a string:
 
 ```json
 "apples" : "There is one apples|There are many apples"
