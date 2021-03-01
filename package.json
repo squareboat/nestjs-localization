@@ -1,5 +1,5 @@
 {
-  "name": "@squareboat/nest-localization",
+  "name": "@squareboat/nestjs-localization",
   "version": "0.0.1",
   "description": "The localization package for your NestJS Applications",
   "main": "dist/index.js",
