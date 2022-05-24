@@ -52,7 +52,7 @@ To import the module statically, you can do
 
 ```javascript
 import { Module } from '@nestjs/common';
-import { LocalizationModule } from '@lib/localization';
+import { LocalizationModule } from '@squareboat/nestjs-localization/dist/src';
 
 @Module({
   imports: [
@@ -82,7 +82,7 @@ Now that the configuration is loaded, you can import your module asynchronously.
 
 ```javascript
 import { Module } from '@nestjs/common';
-import { LocalizationModule } from '@lib/localization';
+import { LocalizationModule } from '@squareboat/nestjs-localization/dist/src';
 
 @Module({
   imports: [
