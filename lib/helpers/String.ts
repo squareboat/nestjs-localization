@@ -11,5 +11,5 @@ export const isLowerCase = (value: string): boolean => {
 };
 
 export const replaceAll = (str: string, find: any, replace: any): string => {
-  return str.replace(new RegExp(find, 'g'), replace);
+  return str.replace(new RegExp(find, "g"), replace);
 };

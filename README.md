@@ -51,14 +51,14 @@ Once you have the `@squareboat/nestjs-localization` package installed in your pr
 To import the module statically, you can do
 
 ```javascript
-import { Module } from '@nestjs/common';
-import { LocalizationModule } from '@lib/localization';
+import { Module } from "@nestjs/common";
+import { LocalizationModule } from "@squareboat/nestjs-localization";
 
 @Module({
   imports: [
     LocalizationModule.register({
-      path: 'absolute/path/to/your/resource/directory',
-      fallbackLang: 'en',
+      path: "absolute/path/to/your/resource/directory",
+      fallbackLang: "en",
     }),
   ],
 })
@@ -70,25 +70,25 @@ export class AppModule {}
 To import the module dynamically, create a configuration and load it into your `Config Module`. Read about it <a href='https://docs.nestjs.com/techniques/configuration#configuration-namespaces'>here.</a>
 
 ```javascript
-import { registerAs } from '@nestjs/config';
+import { registerAs } from "@nestjs/config";
 
-export default registerAs('localization', () => ({
-  path: 'absolute/path/to/your/resource/directory',
-  fallbackLang: 'en',
+export default registerAs("localization", () => ({
+  path: "absolute/path/to/your/resource/directory",
+  fallbackLang: "en",
 }));
 ```
 
 Now that the configuration is loaded, you can import your module asynchronously.
 
 ```javascript
-import { Module } from '@nestjs/common';
-import { LocalizationModule } from '@lib/localization';
+import { Module } from "@nestjs/common";
+import { LocalizationModule } from "@squareboat/nestjs-localization";
 
 @Module({
   imports: [
     LocalizationModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: (config: ConfigService) => config.get('localization'),
+      useFactory: (config: ConfigService) => config.get("localization"),
       inject: [ConfigService],
     }),
   ],
@@ -148,19 +148,19 @@ __(key: string, language?: string, options?: Record<string, any>): string
 Examples :
 
 ```javascript
-__('helloWorld', 'en'); // returns => Hello Worlds
-__('Have a good day', 'de'); // returns => Haben Sie einen guten Tag
-__('greetings.morning', 'en'); // returns => Good Morning
-__('randomKey', 'en'); // returns => ERR::INVALID KEY ==> randomKey
+__("helloWorld", "en"); // returns => Hello Worlds
+__("Have a good day", "de"); // returns => Haben Sie einen guten Tag
+__("greetings.morning", "en"); // returns => Good Morning
+__("randomKey", "en"); // returns => ERR::INVALID KEY ==> randomKey
 ```
 
 You can also skip the language parameter if you wish to and the package will use the fallback language as the speified language.
 Examples :
 
 ```javascript
-__('helloWorld'); // returns => Hello World
-__('greetings.morning'); // returns => Good Morning
-__('randomKey'); // returns => ERR::INVALID KEY ==> randomKey
+__("helloWorld"); // returns => Hello World
+__("greetings.morning"); // returns => Good Morning
+__("randomKey"); // returns => ERR::INVALID KEY ==> randomKey
 ```
 
 ### Replacing Parameters In Translation Strings
@@ -178,7 +178,7 @@ If you wish, you may define placeholders in your translation strings. All placeh
 To replace the placeholders when retrieving a translation string, you may pass an array of replacements as the second argument to the `__` function:
 
 ```javascript
-__('hello', 'en', { name: 'jeo' }); // returns => Hello, jeo
+__("hello", "en", { name: "jeo" }); // returns => Hello, jeo
 ```
 
 If your placeholder contains all capital letters, or only has its first letter capitalized, the translated value will be capitalized accordingly:
@@ -217,13 +217,13 @@ transChoice(
 In this example, since the count is greater than one, the plural form of the translation string is returned:
 
 ```javascript
-transChoice('apples', 'en', 10); // returns => There are some apples
+transChoice("apples", "en", 10); // returns => There are some apples
 ```
 
 If you want the string to use the fallback language you can omit the 2nd parameter as shown below :
 
 ```javascript
-transChoice('apples', 10); // returns => There are some apples
+transChoice("apples", 10); // returns => There are some apples
 ```
 
 > NOTE : **The count agrument is required for tranChoice**
@@ -241,7 +241,7 @@ You may also define placeholder attributes in pluralization strings. These place
 ```
 
 ```javascript
-transChoice('time.minutes_ago', 'en', 5, { value: 5 }); // returns => 5 minutes ago
+transChoice("time.minutes_ago", "en", 5, { value: 5 }); // returns => 5 minutes ago
 ```
 
 If you would like to display the integer value that was passed to the `transChoice` function, you may use the built-in `:count` placeholder:
@@ -255,7 +255,7 @@ If you would like to display the integer value that was passed to the `transChoi
 ```
 
 ```javascript
-transChoice('apples', 'en', 30); // returns => There are 30 apples
+transChoice("apples", "en", 30); // returns => There are 30 apples
 ```
 
 ## Contributing

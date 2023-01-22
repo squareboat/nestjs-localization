@@ -1,12 +1,12 @@
-export * from './String';
-import { Language } from '../services';
+export * from "./String";
+import { LocalizationService } from "../services";
 
 export const __ = (
   key: string,
   language?: string | Record<string, any>,
   options?: Record<string, any>
 ): string => {
-  return Language.trans(key, language, options);
+  return LocalizationService.trans(key, language, options);
 };
 
 export const transChoice = (
@@ -15,5 +15,5 @@ export const transChoice = (
   count?: number | Record<string, any>,
   options?: Record<string, any>
 ): string => {
-  return Language.transChoice(key, language, count, options);
+  return LocalizationService.transChoice(key, language, count, options);
 };

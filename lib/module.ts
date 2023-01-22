@@ -1,14 +1,14 @@
-import { Global, Module, DynamicModule, Provider, Type } from '@nestjs/common';
+import { Global, Module, DynamicModule, Provider, Type } from "@nestjs/common";
 import {
   LocalizationAsyncOptions,
   LocalizationAsyncOptionsFactory,
   LocalizationOptions,
-} from './interfaces';
-import { CONFIG_OPTIONS } from './constants';
-import { Language } from './services';
+} from "./interfaces";
+import { CONFIG_OPTIONS } from "./constants";
+import { LocalizationService } from "./services";
 
 @Global()
-@Module({})
+@Module({ imports: [], providers: [] })
 export class LocalizationModule {
   /**
    * Register options
@@ -18,13 +18,10 @@ export class LocalizationModule {
     return {
       module: LocalizationModule,
       providers: [
-        {
-          provide: CONFIG_OPTIONS,
-          useValue: options,
-        },
-        Language,
+        { provide: CONFIG_OPTIONS, useValue: options },
+        LocalizationService,
       ],
-      exports: [Language],
+      exports: [LocalizationService],
     };
   }
 
@@ -35,12 +32,15 @@ export class LocalizationModule {
     return {
       module: LocalizationModule,
       imports: [],
-      providers: [Language, this.createLocalizationOptionsProvider(options)],
+      providers: [
+        LocalizationService,
+        this.createLocalizationOptionsProvider(options),
+      ],
     };
   }
 
   private static createLocalizationOptionsProvider(
-    options: LocalizationAsyncOptions,
+    options: LocalizationAsyncOptions
   ): Provider {
     if (options.useFactory) {
       return {

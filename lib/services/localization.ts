@@ -1,17 +1,17 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { CONFIG_OPTIONS } from '../constants';
-import get from '../utils/get';
+import { Injectable, Inject } from "@nestjs/common";
+import { CONFIG_OPTIONS } from "../constants";
+import get from "../utils/get";
 import {
   isUpperCase,
   isLowerCase,
   isSentenceCase,
   replaceAll,
-} from '../helpers';
-import * as fs from 'fs';
-import { LocalizationOptions } from '../interfaces';
+} from "../helpers";
+import { readdirSync, readFileSync } from "fs";
+import { LocalizationOptions } from "../interfaces";
 
 @Injectable()
-export class Language {
+export class LocalizationService {
   private static data: Record<string, any>;
   private static fallbackLang: string;
   private static caseTypes = {
@@ -22,15 +22,18 @@ export class Language {
   };
 
   constructor(@Inject(CONFIG_OPTIONS) private options: LocalizationOptions) {
-    const { path, fallbackLang } = options;
+    const { path, fallbackLang } = this.options;
     const data: Record<string, any> = {};
 
-    Language.readFiles(path, function (filename: string, content: any) {
-      data[filename.split('.')[0]] = JSON.parse(content);
-    });
+    LocalizationService.readFiles(
+      path,
+      function (filename: string, content: any) {
+        data[filename.split(".")[0]] = JSON.parse(content);
+      }
+    );
 
-    Language.data = data;
-    Language.fallbackLang = fallbackLang;
+    LocalizationService.data = data;
+    LocalizationService.fallbackLang = fallbackLang;
   }
 
   static trans(
@@ -38,15 +41,15 @@ export class Language {
     language?: string | Record<string, any>,
     options?: Record<string, any>
   ): string {
-    let langData = Language.data[this.fallbackLang];
-    if (typeof language === 'string' && language != '') {
-      langData = Language.data[language];
+    let langData = LocalizationService.data[this.fallbackLang];
+    if (typeof language === "string" && language != "") {
+      langData = LocalizationService.data[language];
     } else {
       options = language as Record<string, any>;
     }
 
     let text = get(langData, key, null);
-    if (!text || typeof text !== 'string') return `ERR::INVALID KEY ==> ${key}`;
+    if (!text || typeof text !== "string") return `ERR::INVALID KEY ==> ${key}`;
 
     if (options) {
       for (const k in options) {
@@ -63,30 +66,30 @@ export class Language {
     count?: number | Record<string, any>,
     options?: Record<string, any>
   ): string {
-    let langData = Language.data[this.fallbackLang];
-    if (typeof language === 'string' && language != '') {
-      langData = Language.data[language];
+    let langData = LocalizationService.data[this.fallbackLang];
+    if (typeof language === "string" && language != "") {
+      langData = LocalizationService.data[language];
     }
 
-    if (typeof count === 'object') {
+    if (typeof count === "object") {
       options = count as Record<string, any>;
     }
 
-    if (typeof language === 'number') {
+    if (typeof language === "number") {
       count = language as number;
     }
 
-    if (!count && count != 0) throw new Error('Count value not found');
+    if (!count && count != 0) throw new Error("Count value not found");
 
     let text = get(langData, key, null);
-    if (!text || typeof text !== 'string') return `ERR::INVALID KEY ==> ${key}`;
+    if (!text || typeof text !== "string") return `ERR::INVALID KEY ==> ${key}`;
 
     const textObjArr: Record<string, any>[] = [];
-    text.split('|').forEach((t) => {
+    text.split("|").forEach((t) => {
       textObjArr.push(this.choiceStringParser(t));
     });
 
-    let finalText = '';
+    let finalText = "";
     for (const t of textObjArr) {
       if (t.limit.upper === count && t.limit.lower === count) {
         finalText = t.text;
@@ -113,14 +116,14 @@ export class Language {
   }
 
   private static choiceStringParser(t: string): Record<string, any> {
-    const limits: string[] = t.match(/\[(.*?)\]/)![1].split(',');
+    const limits: string[] = t.match(/\[(.*?)\]/)![1].split(",");
 
     return {
-      text: replaceAll(t, /\[.*?\]/, '').trim(),
+      text: replaceAll(t, /\[.*?\]/, "").trim(),
       limit: {
-        lower: limits[0] === '*' ? Number.NEGATIVE_INFINITY : +limits[0],
+        lower: limits[0] === "*" ? Number.NEGATIVE_INFINITY : +limits[0],
         upper: limits[1]
-          ? limits[1] === '*'
+          ? limits[1] === "*"
             ? Number.POSITIVE_INFINITY
             : +limits[1]
           : +limits[0],
@@ -176,10 +179,10 @@ export class Language {
   }
 
   private static readFiles(dirname: string, onFileContent: any) {
-    const fss = fs.readdirSync(dirname);
+    const fss = readdirSync(dirname);
     fss.forEach((filename: string) => {
-      const fileData = fs.readFileSync(dirname + filename, {
-        encoding: 'utf-8',
+      const fileData = readFileSync(dirname + "/" + filename, {
+        encoding: "utf-8",
       });
       onFileContent(filename, fileData);
     });

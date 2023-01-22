@@ -1,4 +1,4 @@
-import { ModuleMetadata, Type } from '@nestjs/common';
+import { ModuleMetadata, Type } from "@nestjs/common";
 
 export interface LocalizationOptions {
   path: string;
@@ -12,7 +12,7 @@ export interface LocalizationAsyncOptionsFactory {
 }
 
 export interface LocalizationAsyncOptions
-  extends Pick<ModuleMetadata, 'imports'> {
+  extends Pick<ModuleMetadata, "imports"> {
   useExisting?: Type<LocalizationOptions>;
   useClass?: Type<LocalizationAsyncOptionsFactory>;
   useFactory?: (
