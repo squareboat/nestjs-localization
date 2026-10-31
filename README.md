@@ -189,13 +189,19 @@ If your placeholder contains all capital letters, or only has its first letter c
 "hello": "Hello, :NAME"     // Hello, JEO
 ```
 
+A lowercase placeholder keeps the value exactly as passed, so `:name` with `"McDonald"` gives `McDonald`.
+
+Placeholder names are matched longest first: with `name` and `names` both passed, `:names` uses `names`. Text right after a placeholder is kept, so `":width:height"` and `":widthpx"` work as expected. Keep placeholder names to letters, digits and `_`.
+
 ## Pluralization
 
 Pluralization is a complex problem, as different languages have a variety of complex rules for pluralization; however, `@squareboat/nestjs-localization` can help you translate strings differently based on pluralization rules that you define. Using a `|` character, you may distinguish singular and plural forms of a string:
 
 ```json
-"apples" : "There is one apples|There are many apples"
+"apples" : "[1] There is one apple|[2,*] There are many apples"
 ```
+
+Every part needs a range in square brackets: `[n]` for one value, `[min,max]` for a range, `*` for no limit.
 
 You may even create more complex pluralization rules which specify translation strings for multiple ranges of values:
 

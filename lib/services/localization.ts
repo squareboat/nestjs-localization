@@ -1,7 +1,7 @@
 import { Injectable, Inject } from "@nestjs/common";
 import { CONFIG_OPTIONS } from "../constants";
 import get from "../utils/get";
-import { escapeRegExp, replaceAll } from "../helpers";
+import { replaceAll } from "../helpers";
 import { readdirSync, readFileSync } from "fs";
 import { LocalizationOptions } from "../interfaces";
 
@@ -40,11 +40,7 @@ export class LocalizationService {
     let text = get(langData, key, null);
     if (!text || typeof text !== "string") return `ERR::INVALID KEY ==> ${key}`;
 
-    if (options) {
-      for (const k in options) {
-        text = this.handleOptions(text, k, options[k]);
-      }
-    }
+    if (options) text = this.replacePlaceholders(text, options);
 
     return text;
   }
@@ -91,15 +87,11 @@ export class LocalizationService {
       }
     }
 
-    if (finalText && finalText.match(/\bcount\b/)) {
+    if (finalText && finalText.match(/\bcount\b/i)) {
       options = { ...options, count };
     }
 
-    if (options) {
-      for (const k in options) {
-        finalText = this.handleOptions(finalText, k, options[k]);
-      }
-    }
+    if (options) finalText = this.replacePlaceholders(finalText, options);
 
     return finalText ? finalText : `ERR::INVALID COUNT ==> ${count}`;
   }
@@ -121,21 +113,33 @@ export class LocalizationService {
   }
 
   /**
-   * Replace every `:key` placeholder. The placeholder's case decides the value's case:
-   * `:NAME` upper-cases it, `:Name` capitalises it, `:name` keeps it as passed (#4).
+   * Replace every `:key` placeholder in one pass. Longer keys are tried first,
+   * so `:names` is not read as `:name` + "s", while `:widthpx` still becomes
+   * the width followed by "px". The placeholder's case decides the value's
+   * case: `:NAME` upper-cases it, `:Name` capitalises it, any other casing
+   * keeps it as passed (#4). Keys whose value is undefined are left as is.
    */
-  private static handleOptions(text: string, key: string, value: any): string {
-    const str = String(value);
-    // `(?![\w])` so `:name` does not eat the start of `:names`
-    const pattern = new RegExp(`:${escapeRegExp(key)}(?![\\w])`, "gi");
-    return text.replace(pattern, (placeholder) => {
-      const written = placeholder.slice(1);
-      if (written === key) return str;
-      if (written === written.toUpperCase()) return str.toUpperCase();
-      if (written[0] === written[0].toUpperCase()) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
+  private static replacePlaceholders(text: string, options: Record<string, any>): string {
+    const keys = Object.keys(options)
+      .filter((k) => k !== "" && options[k] !== undefined)
+      .sort((a, b) => b.length - a.length);
+    if (!keys.length) return text;
+
+    const byLowerCase = new Map<string, string>();
+    for (const k of keys) {
+      if (!byLowerCase.has(k.toLowerCase())) byLowerCase.set(k.toLowerCase(), k);
+    }
+
+    const pattern = new RegExp(`:(${keys.map(escapeRegExp).join("|")})`, "gi");
+    return text.replace(pattern, (_placeholder, written: string) => {
+      const key = written in options ? written : byLowerCase.get(written.toLowerCase())!;
+      const value = String(options[key]);
+      const hasLetters = written !== written.toLowerCase();
+      if (hasLetters && written === written.toUpperCase()) return value.toUpperCase();
+      if (written[0] !== written[0].toLowerCase()) {
+        return value.charAt(0).toUpperCase() + value.slice(1);
       }
-      return str;
+      return value;
     });
   }
 
@@ -149,3 +153,5 @@ export class LocalizationService {
     });
   }
 }
+
+const escapeRegExp = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

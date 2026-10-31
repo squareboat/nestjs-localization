@@ -13,6 +13,3 @@ export const isLowerCase = (value: string): boolean => {
 export const replaceAll = (str: string, find: any, replace: any): string => {
   return str.replace(new RegExp(find, "g"), replace);
 };
-
-export const escapeRegExp = (value: string): string =>
-  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
