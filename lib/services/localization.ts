@@ -1,12 +1,7 @@
 import { Injectable, Inject } from "@nestjs/common";
 import { CONFIG_OPTIONS } from "../constants";
 import get from "../utils/get";
-import {
-  isUpperCase,
-  isLowerCase,
-  isSentenceCase,
-  replaceAll,
-} from "../helpers";
+import { escapeRegExp, replaceAll } from "../helpers";
 import { readdirSync, readFileSync } from "fs";
 import { LocalizationOptions } from "../interfaces";
 
@@ -14,12 +9,6 @@ import { LocalizationOptions } from "../interfaces";
 export class LocalizationService {
   private static data: Record<string, any>;
   private static fallbackLang: string;
-  private static caseTypes = {
-    UPPER_CASE: 1,
-    LOWER_CASE: 2,
-    SENTENCE_CASE: 3,
-    UNKNOWN: 0,
-  };
 
   constructor(@Inject(CONFIG_OPTIONS) private options: LocalizationOptions) {
     const { path, fallbackLang } = this.options;
@@ -131,51 +120,23 @@ export class LocalizationService {
     };
   }
 
+  /**
+   * Replace every `:key` placeholder. The placeholder's case decides the value's case:
+   * `:NAME` upper-cases it, `:Name` capitalises it, `:name` keeps it as passed (#4).
+   */
   private static handleOptions(text: string, key: string, value: any): string {
-    // if value is a number
-    if (!isNaN(+value)) return replaceAll(text, `:${key}`, value);
-
-    // if value is a string
-    let lowerCaseText = text.toLowerCase();
-    const keyStartIdx = lowerCaseText.indexOf(key);
-    const identifier: string = text.substr(
-      keyStartIdx,
-      keyStartIdx + key.length
-    );
-
-    const caseType = isUpperCase(identifier)
-      ? this.caseTypes.UPPER_CASE
-      : isLowerCase(identifier)
-      ? this.caseTypes.LOWER_CASE
-      : isSentenceCase(identifier)
-      ? this.caseTypes.SENTENCE_CASE
-      : this.caseTypes.UNKNOWN;
-
-    text = replaceAll(
-      text,
-      `:${
-        caseType === this.caseTypes.UPPER_CASE
-          ? key.toUpperCase()
-          : caseType === this.caseTypes.LOWER_CASE
-          ? key.toLowerCase()
-          : caseType === this.caseTypes.SENTENCE_CASE
-          ? key[0].toUpperCase() + key.slice(1)
-          : key
-      }`,
-      () => {
-        switch (caseType) {
-          case this.caseTypes.UPPER_CASE:
-            return value.toUpperCase();
-          case this.caseTypes.LOWER_CASE:
-            return value.toLowerCase();
-          case this.caseTypes.SENTENCE_CASE:
-            return value[0].toUpperCase() + value.slice(1);
-          default:
-            return value;
-        }
+    const str = String(value);
+    // `(?![\w])` so `:name` does not eat the start of `:names`
+    const pattern = new RegExp(`:${escapeRegExp(key)}(?![\\w])`, "gi");
+    return text.replace(pattern, (placeholder) => {
+      const written = placeholder.slice(1);
+      if (written === key) return str;
+      if (written === written.toUpperCase()) return str.toUpperCase();
+      if (written[0] === written[0].toUpperCase()) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
       }
-    );
-    return text;
+      return str;
+    });
   }
 
   private static readFiles(dirname: string, onFileContent: any) {

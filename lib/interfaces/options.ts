@@ -13,7 +13,7 @@ export interface LocalizationAsyncOptionsFactory {
 
 export interface LocalizationAsyncOptions
   extends Pick<ModuleMetadata, "imports"> {
-  useExisting?: Type<LocalizationOptions>;
+  useExisting?: Type<LocalizationAsyncOptionsFactory>;
   useClass?: Type<LocalizationAsyncOptionsFactory>;
   useFactory?: (
     ...args: any[]
