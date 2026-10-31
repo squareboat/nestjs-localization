@@ -31,11 +31,13 @@ export class LocalizationModule {
   static registerAsync(options: LocalizationAsyncOptions): DynamicModule {
     return {
       module: LocalizationModule,
-      imports: [],
+      imports: [...(options.imports || [])],
       providers: [
         LocalizationService,
         this.createLocalizationOptionsProvider(options),
+        ...(options.useClass ? [{ provide: options.useClass, useClass: options.useClass }] : []),
       ],
+      exports: [LocalizationService],
     };
   }
 
@@ -51,7 +53,7 @@ export class LocalizationModule {
     }
 
     const inject = [
-      (options.useClass || options.useExisting) as Type<LocalizationOptions>,
+      (options.useClass || options.useExisting) as Type<LocalizationAsyncOptionsFactory>,
     ];
 
     return {
